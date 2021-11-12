@@ -1,0 +1,4 @@
+# RFC 521, 2142
+postmaster@{{ DOMAIN }}   admin@{{ DOMAIN }}
+abuse@{{ DOMAIN }}        admin@{{ DOMAIN }}
+

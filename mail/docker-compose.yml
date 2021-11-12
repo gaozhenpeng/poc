@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  postfix:
+    hostname: mail.workspace.local
+    container_name: postfix
+    image: postfix
+    command: tail -f /dev/null
+    environment:
+      - HOSTNAME=mail.workspace.local
+      - DOMAIN=workspace.local
+      - MYNETWORKS="127.0.0.0/8 172.30.0.0/24"
+    ports:
+      - "127.0.0.1:25:25"
+    networks:
+      default:
+        ipv4_address: 172.30.0.2
+    extra_hosts:
+      - "workspace.local:127.0.0.1"
+
+  dovecot:
+    hostname: dovecot.workspace.local
+    container_name: dovecot
+    image: dovecot
+    command: tail -f /dev/null
+    environment:
+      - DOMAIN=workspace.local
+    ports:
+      - "127.0.0.1:24:24"
+      - "127.0.0.1:143:143"
+    networks:
+      default:
+        ipv4_address: 172.30.0.3
+    depends_on:
+      - postfix
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
