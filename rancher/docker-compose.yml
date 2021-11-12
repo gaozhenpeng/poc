@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  rancher:
+    # https://hub.docker.com/r/rancher/rancher
+    image: rancher/rancher
+    container_name: rancher
+    ports:
+      - '127.0.0.1:80:80'
+      - '127.0.0.1:443:443'
+    # https://rancher.com/docs/rancher/v2.x/en/installation/other-installation-methods/single-node-docker/#privileged-access-for-rancher-v2-5
+    privileged: true
