@@ -1,0 +1,25 @@
+# leave blank line below
+
+dn: dc=example,dc=com
+dc: example
+description: description
+objectClass: dcObject
+objectClass: organization
+o: Example Corp.
+
+dn: ou=people,dc=example,dc=com
+ou: people
+description: people in example
+objectClass: organizationalUnit
+
+dn: cn=John Doe,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: John Doe
+cn: John Doe 1
+cn: John Doe 2
+sn: Doe
+uid: jdoe
+userpassword: jdoepass
+mail: johndoe@example.com
+description: john doe
+ou: Department 1

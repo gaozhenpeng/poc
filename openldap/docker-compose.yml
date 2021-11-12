@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  ldap:
+    # https://github.com/bitnami/bitnami-docker-openldap
+    # https://hub.docker.com/r/bitnami/openldap/tags/
+    image: bitnami/openldap:2.5.9
+    container_name: ldap
+    hostname: ldap
+    ports:
+      - '389'
+      - '636'
+    environment:
+      - BITNAMI_DEBUG=true
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=admin
+      - LDAP_CUSTOM_LDIF_DIR=/ldifs
+    volumes:
+      - ./bootstrap.ldif:/ldifs/bootstrap.ldif
+
