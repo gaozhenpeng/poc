@@ -1,0 +1,92 @@
+version: '3'
+
+services:
+  db1:
+    # https://hub.docker.com/_/mariadb
+    image: mariadb:10.3.31-focal
+    container_name: db1
+    hostname: db1
+    ports:
+      - "3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_DATABASE: test
+    volumes:
+     - ./db1:/docker-entrypoint-initdb.d
+     - ./db1/master.cnf:/etc/mysql/conf.d/master.cnf
+
+  db1s:
+    # https://hub.docker.com/_/mariadb
+    image: mariadb:10.3.31-focal
+    container_name: db1s
+    hostname: db1s
+    ports:
+      - "3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+    volumes:
+     - ./db1/slave.cnf:/etc/mysql/conf.d/slave.cnf
+
+  db2:
+    # https://hub.docker.com/_/mariadb
+    image: mariadb:10.3.31-focal
+    container_name: db2
+    hostname: db2
+    ports:
+      - "3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_DATABASE: test
+    volumes:
+     - ./db2:/docker-entrypoint-initdb.d
+     - ./db2/master.cnf:/etc/mysql/conf.d/master.cnf
+
+  db2s:
+    # https://hub.docker.com/_/mariadb
+    image: mariadb:10.3.31-focal
+    container_name: db2s
+    hostname: db2s
+    ports:
+      - "3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+    volumes:
+     - ./db2/slave.cnf:/etc/mysql/conf.d/slave.cnf
+
+  db3:
+    # https://hub.docker.com/_/mariadb
+    image: mariadb:10.3.31-focal
+    container_name: db3
+    hostname: db3
+    ports:
+      - "3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+      MARIADB_DATABASE: other
+    volumes:
+     - ./db3:/docker-entrypoint-initdb.d
+     - ./db3/master.cnf:/etc/mysql/conf.d/master.cnf
+
+  db3s:
+    # https://hub.docker.com/_/mariadb
+    image: mariadb:10.3.31-focal
+    container_name: db3s
+    hostname: db3s
+    ports:
+      - "3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: pass
+    volumes:
+     - ./db3/slave.cnf:/etc/mysql/conf.d/slave.cnf
+
+  mxs:
+    # https://hub.docker.com/r/mariadb/maxscale
+    image: mariadb/maxscale:6.1.3
+    container_name: mxs
+    hostname: mxs
+    # curl -u admin:mariadb http://localhost:8989/v1/maxscale
+    ports:
+      - "8989:8989"
+      - "4000:4000"
+    volumes:
+      - ./custom.cnf:/etc/maxscale.cnf.d/custom.cnf

@@ -1,0 +1,4 @@
+USE test;
+
+CREATE TABLE table2 (v VARCHAR(10));
+INSERT INTO table2 VALUES ('2');

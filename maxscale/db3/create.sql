@@ -1,0 +1,4 @@
+USE other;
+
+CREATE TABLE table3 (v VARCHAR(10));
+INSERT INTO table3 VALUES ('3');
