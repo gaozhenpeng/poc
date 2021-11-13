@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  logstash:
+    # https://www.docker.elastic.co/r/logstash
+    image: docker.elastic.co/logstash/logstash:7.15.2
+    container_name: cn_logstash
+    hostname: logstash
+    # https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html
+    environment:
+      NODE_NAME: logstash
+    ports:
+      - '5228'
+    # user must be 1000
+    user: "${UID}:1000"
+    volumes:
+      - ./logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./pipeline.conf:/usr/share/logstash/pipeline/pipeline.conf
+
+  elasticsearch:
+    # https://www.docker.elastic.co/r/elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    container_name: cn_elasticsearch
+    # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - '127.0.0.1:9200:9200'
+
+  kibana:
+    # https://www.docker.elastic.co/r/kibana
+    image: docker.elastic.co/kibana/kibana:7.15.2
+    container_name: cn_kibana
+    # https://www.elastic.co/guide/en/kibana/current/settings.html
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    ports:
+      - '127.0.0.1:5601:5601'
