@@ -1,0 +1,4 @@
+configuration-as-code:1.51
+ldap:2.7
+rebuild:1.32
+role-strategy:3.2.0

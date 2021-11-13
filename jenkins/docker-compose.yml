@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  jenkins:
+    build: .
+    container_name: cn_jenkins
+    hostname: jenkins
+    environment:
+      CASC_JENKINS_CONFIG: /usr/share/jenkins/ref/casc_configs/jenkins.yml
+    ports:
+      - '127.0.0.1:8880:8080'
+    volumes:
+      - ./jenkins.yml:/usr/share/jenkins/ref/casc_configs/jenkins.yml
