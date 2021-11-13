@@ -1,0 +1,2 @@
+admin@{{ DOMAIN }}:{plain}adminPass::::::
+user@{{ DOMAIN }}:{plain}userPass::::::
