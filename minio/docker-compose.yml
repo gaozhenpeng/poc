@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  minio:
+    # add suffix cn_ podman fix
+    container_name: cn_minio
+    # https://hub.docker.com/r/minio/minio
+    image: minio/minio:RELEASE.2021-11-09T03-21-45Z
+    command: server /data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    environment:
+      - MINIO_ACCESS_KEY=minio
+      - MINIO_SECRET_KEY=minio1234
+
+  # mc config host add docker http://minio:9000 minio minio1234
+  # mc mb docker/bucket-test
+  test:
+    container_name: cn_test
+    build: .
+    command: tail -f /dev/null
