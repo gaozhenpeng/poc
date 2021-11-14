@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  rabbitmq:
+    container_name: cs_rabbitmq
+    build: .
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_USERNAME: rabbitmq
+      RABBITMQ_PASSWORD: rabbitmq
+      RABBITMQ_PLUGINS: "rabbitmq_delayed_message_exchange,rabbitmq_management,rabbitmq_shovel,rabbitmq_shovel_management,rabbitmq_stomp,rabbitmq_web_stomp"
+    ports:
+      - "127.0.0.1:4369:4369"    # epmd
+      - "127.0.0.1:5672:5672"    # amqp
+      - "127.0.0.1:15672:15672"  # api
+      - "127.0.0.1:15674:15674"  # webstomp
+
