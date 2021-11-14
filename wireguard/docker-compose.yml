@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  peerA:
+    image: alpine:3.14.0
+    container_name: cn_peerA
+    hostname: peerA
+    volumes:
+      - ./bashrc:/root/.bashrc
+    networks:
+      wireguard:
+        ipv4_address: 172.16.200.10
+    cap_add:
+      - NET_ADMIN
+    stdin_open: true
+    tty: true
+    entrypoint:
+      - /bin/sh
+      - '-c'
+      - |
+          time apk add -U wireguard-tools
+          bash
+
+  peerB:
+    image: alpine:3.14.0
+    container_name: cn_peerB
+    hostname: peerB
+    volumes:
+       - ./bashrc:/root/.bashrc
+    networks:
+      wireguard:
+        ipv4_address: 172.16.200.20
+    cap_add:
+      - NET_ADMIN
+    stdin_open: true
+    tty: true
+    entrypoint:
+      - /bin/sh
+      - '-c'
+      - |
+          time apk add -U wireguard-tools
+          bash
+
+networks:
+  wireguard:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.200.0/24
