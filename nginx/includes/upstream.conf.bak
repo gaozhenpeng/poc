@@ -1,0 +1,11 @@
+server {
+  listen 0.0.0.0:80;
+  server_name app.local
+  resolver 127.0.0.11 valid=2s; # docker dns
+
+  location / {
+    include /etc/nginx/conf.d/includes/proxy.conf;
+    set $upstream http://app:8080;
+    proxy_pass $upstream;
+  }
+}
