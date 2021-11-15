@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:1.11
+    ports:
+      - 5775
+      - 6831
+      - 6832
+      - 5778
+      - 16686:16686
+      - 14268
+      - 9411
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+
+  rapp2j:
+    container_name: rapp2j
+    image: rapp2j
+    depends_on:
+      - jaeger
