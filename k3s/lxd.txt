@@ -1,0 +1,12 @@
+# lxd
+sudo apt-get update
+sudo apt-get install lxd
+cat lxd_config.yml | lxd init --preseed
+
+lxc init ubuntu:18.04 k3smaster -p default
+lxc init ubuntu:18.04 k3sworker -p default
+
+# https://github.com/rancher/k3s/releases
+lxc start k3smaster
+lxc exec k3smaster bash
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.17.13+k3s2 INSTALL_K3S_EXEC="--flannel-iface=eth0" sh -

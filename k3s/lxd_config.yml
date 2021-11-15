@@ -1,0 +1,33 @@
+cluster: null
+
+config:
+  images.auto_update_interval: "0"
+
+networks:
+- name: lxdbr0
+  type: bridge
+  config:
+    ipv4.address: 10.0.0.1/24
+    ipv4.nat: "true"
+    ipv6.address: none
+
+storage_pools:
+- name: default
+  description: default
+  config: {}
+  driver: dir
+
+profiles:
+- name: default
+  description: default
+  config: {}
+  devices:
+    eth0:
+      name: eth0
+      nictype: bridged
+      parent: lxdbr0
+      type: nic
+    root:
+      path: /
+      pool: default
+      type: disk

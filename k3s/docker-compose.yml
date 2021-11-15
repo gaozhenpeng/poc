@@ -1,0 +1,23 @@
+version: "3.7"
+
+# https://rancher.com/docs/k3s/latest/en/installation/datastore
+# https://hub.docker.com/r/bitnami/mariadb
+services:
+
+  mariadb:
+    container_name: mariadb
+    image: bitnami/mariadb:10.3.20
+    hostname: mariadb
+    environment:
+      - MARIADB_ROOT_USER=root
+      - MARIADB_ROOT_PASSWORD=root
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US:en
+    ports:
+      - "192.168.33.51:3306:3306"
+    restart: always
+    volumes:
+      - ./create_db.sql:/docker-entrypoint-initdb.d/k3s.sql:ro
+      - ./custom.cnf:/opt/bitnami/mysql/conf/custom.cnf:ro
+      - './mariadb_data:/bitnami/mariadb'
+
