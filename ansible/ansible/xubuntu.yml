@@ -1,0 +1,16 @@
+---
+- hosts: xubuntu
+  gather_facts: False
+
+  vars_prompt:
+    - name: ansible_user
+      prompt: ansible_user
+    - name: ansible_ssh_pass
+      prompt: ansible_ssh_pass
+    - name: ansible_sudo_pass
+      prompt: ansible_sudo_pass
+
+  roles:
+  - role: xubuntu
+  - role: anbox
+

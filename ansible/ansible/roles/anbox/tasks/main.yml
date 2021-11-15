@@ -1,0 +1,29 @@
+---
+- name: add anbox repo
+  apt_repository:
+    repo: ppa:morphis/anbox-support
+  become: yes
+
+- name: update repo
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: install anbox kernel modules
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - linux-headers-generic
+    - anbox-modules-dkms
+  become: yes
+
+- name: load anbox kernel modules
+  shell: |
+    modprobe ashmem_linux
+    modprobe binder_linux
+  become: yes
+
+#- name: install anbox
+#  command: snap install --devmode --beta anbox
+#  become: yes

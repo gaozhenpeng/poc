@@ -1,0 +1,46 @@
+---
+- name: install dev tools
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - git
+    - tig
+    - vim
+    - tmux
+    - xclip
+    - htop
+    - ncdu
+    - aria2
+    - pass
+    - mpv
+    - feh
+    - zathura
+    - xtrlock
+    - pinentry-tty
+    - xdotool
+    - curl
+    - cmus
+    - sqlite3
+  become: yes
+
+- name: download youtube-dl
+  get_url:
+    url: https://yt-dl.org/downloads/latest/youtube-dl
+    dest: /usr/local/bin/youtube-dl
+    remote_src: yes
+  become: yes
+
+- name: set youtube-dl permissions
+  command: chmod a+rx /usr/local/bin/youtube-dl
+  become: yes
+
+- name: install mysqlsh
+  apt:
+    deb: https://cdn.mysql.com//Downloads/MySQL-Shell/mysql-shell_8.0.16-1ubuntu18.04_amd64.deb
+  become: yes
+
+- name: install ripgrep
+  apt:
+    deb: https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb
+  become: yes

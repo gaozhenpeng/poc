@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  controlnode:
+    container_name: controlnode
+    image: controlnode
+    command: >
+      bash -c "tail -f /dev/null"
+    volumes:
+      - ./ansible:/ansible
+
+  sshnode:
+    container_name: sshnode
+    image: sshnode
+    command: >
+      bash -c "/etc/init.d/ssh start && tail -f /dev/null"
+    ports:
+      - "22"

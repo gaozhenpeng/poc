@@ -1,0 +1,33 @@
+---
+
+- hosts: docker
+  roles:
+  - role: docker
+
+- hosts: server
+  gather_facts: False
+  vars_prompt:
+    - name: ansible_user
+      prompt: ansible_user
+    - name: ansible_ssh_pass
+      prompt: ansible_ssh_pass
+    - name: ansible_sudo_pass
+      prompt: ansible_sudo_pass
+  roles:
+  - role: docker
+  - role: docker-compose
+
+
+- hosts: workstation
+  gather_facts: False
+  vars_prompt:
+    - name: ansible_user
+      prompt: ansible_user
+    - name: ansible_ssh_pass
+      prompt: ansible_ssh_pass
+    - name: ansible_sudo_pass
+      prompt: ansible_sudo_pass
+  roles:
+  - role: devtools
+  - role: google-cloud-sdk
+

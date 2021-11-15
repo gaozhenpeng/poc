@@ -1,0 +1,13 @@
+[workstation]
+10.48.30.39
+
+[workstation:vars]
+ansible_connection=ssh
+ansible_python_interpreter=/usr/bin/python3
+
+[server]
+10.48.31.44
+
+[server:vars]
+ansible_connection=ssh
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,12 @@
+---
+- name: download google-cloud-sdk
+  unarchive:
+    src: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-246.0.0-linux-x86_64.tar.gz
+    dest: /home/{{ ansible_user }}
+    remote_src: yes
+
+- name: install google-cloud-sdk
+  shell: /home/{{ ansible_user }}/google-cloud-sdk/install.sh
+  environment:
+    CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+

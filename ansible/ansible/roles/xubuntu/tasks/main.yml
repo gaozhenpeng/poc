@@ -1,0 +1,90 @@
+---
+- name: set background
+  command: xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/image-style -s "0"
+
+- name: set theme
+  shell: |
+    xfconf-query -c xfwm4 -p /general/theme -s "Numix"
+    xfconf-query -c xsettings -p /Net/ThemeName -s "Numix"
+
+- name: disable compositor
+  command: xfconf-query -c xfwm4 -p /general/use_compositing -s "false"
+
+- name: hide desktop icons
+  command: xfconf-query -c xfce4-desktop -np '/desktop-icons/style' -t 'int' -s '0'
+
+- name: hide panel
+  command: xfconf-query -c xfce4-panel -p /panels/panel-0/autohide-behavior -s "2"
+
+- name: remove packages
+  apt:
+    name: "{{ packages }}"
+    state: absent
+    autoremove: yes
+    purge: yes
+  vars:
+    packages:
+    - firefox
+    - firefox-locale-en
+    - gnome-mines
+    - gnome-sudoku
+    - thunderbird
+    - libreoffice*
+    - transmission*
+    - pidgin*
+    - xfce4-notes*
+    - sgt*
+  become: yes
+
+- name: configure lightdm
+  copy:
+    dest: /etc/lightdm/lightdm-gtk-greeter.conf
+    content: |
+      [greeter]
+      background = #000000
+      theme-name = Numix
+      indicators =
+      -keyboard =
+      user-background = false
+      hide-user-image = true
+  become: yes
+
+- name: configure grub
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT.*$'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="text"'
+  become: yes
+
+- name: update grub
+  command: update-grub
+  become: yes
+
+- name: delete folders
+  file:
+    path: "/home/{{ ansible_user }}/{{ item }}"
+    state: absent
+  with_items:
+    - Downloads
+    - Documents
+    - Desktop
+    - Music
+    - Pictures
+    - Public
+    - Templates
+    - Videos
+
+- name: update repo
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: install htop
+  apt:
+    name: htop
+  become: yes
+
+- name: add workspace folder
+  file:
+    path: "/home/{{ ansible_user }}/workspace"
+    state: directory
