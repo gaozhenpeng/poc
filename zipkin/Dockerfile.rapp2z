@@ -1,0 +1,13 @@
+FROM ruby:2.6.3-alpine3.8
+
+RUN apk update \
+    && apk add --virtual build-dependencies \
+        build-base gcc wget git
+
+WORKDIR /app
+COPY rapp2z.rb Gemfile Gemfile.lock ./
+RUN bundle install && cat Gemfile.lock
+
+RUN apk del build-dependencies && rm -rf /var/cache/apk/*
+
+ENTRYPOINT ["ruby", "/app/rapp2.rb"]
