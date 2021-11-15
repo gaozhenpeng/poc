@@ -1,0 +1,11 @@
+/docs/
+/lib/
+/bin/
+/.shards/
+*.dwarf
+/node_modules
+yarn-error.log
+server
+*.dwarf
+*.local.cr
+.env

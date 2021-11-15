@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  lucky:
+    image: lucky:latest
+    command: >
+      sh -c "tail -f /dev/null"
+    volumes:
+      - .:/host
+    env_file:
+     - ./.env
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432"
+

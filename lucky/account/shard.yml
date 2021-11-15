@@ -1,0 +1,24 @@
+name: account
+version: 0.1.0
+
+authors:
+  - your-name-here <your-email-here>
+
+targets:
+  account:
+    main: src/account.cr
+
+crystal: 0.27.0
+
+dependencies:
+  lucky:
+    github: luckyframework/lucky
+    branch: master
+  authentic:
+    github: luckyframework/authentic
+    version: ~> 0.3
+  carbon:
+    github: luckyframework/carbon
+    version: ~> 0.1
+  dotenv:
+    github: gdotdesign/cr-dotenv
