@@ -1,0 +1,55 @@
+# https://rancher.com/docs/rke/latest/en/example-yamls
+
+cluster_name: development
+
+# https://github.com/rancher/rke/releases
+kubernetes_version: "v1.15.9-rancher1-1"
+
+network:
+  plugin: canal
+  options:
+    canal_iface: eth0
+    canal_flannel_backend_type: vxlan
+
+ingress:
+  provider: nginx
+  options:
+    use-forwarded-headers: 'true'
+
+nodes:
+  - address: 10.0.0.10
+    user: rke
+    role:
+      - etcd
+      - controlplane
+      - worker
+    ssh_key_path: keys/rke
+    labels:
+      node: rke0
+
+  - address: 10.0.0.11
+    user: rke
+    role:
+      - etcd
+      - controlplane
+      - worker
+    ssh_key_path: keys/rke
+    labels:
+      node: rke1
+
+  - address: 10.0.0.12
+    user: rke
+    role:
+      - etcd
+      - controlplane
+      - worker
+    ssh_key_path: keys/rke
+    labels:
+      node: rke2
+
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+

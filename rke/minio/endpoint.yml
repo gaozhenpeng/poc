@@ -1,0 +1,9 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: minio
+subsets:
+  - addresses:
+      - ip: 172.20.0.2
+    ports:
+      - port: 9000
