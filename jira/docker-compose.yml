@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+
+  # https://github.com/bitnami/bitnami-docker-mysql
+  mysql:
+    container_name: cn_mysql
+    image: bitnami/mysql:5.7.33-debian-10-r32
+    hostname: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_CHARACTER_SET=utf8mb4
+      - MYSQL_COLLATE=utf8mb4_bin
+    volumes:
+      - ./create_jira_db.sql:/docker-entrypoint-initdb.d/jira.sql:ro
+      - ./custom.cnf:/opt/bitnami/mysql/conf/custom.cnf:ro
+
+  # https://bitbucket.org/atlassian-docker/docker-atlassian-jira/src/master/
+  # https://hub.docker.com/r/atlassian/jira-software
+  jira:
+    container_name: cn_jira
+    build: .
+    environment:
+      - ATL_DB_TYPE=mysql57
+      - ATL_DB_DRIVER=com.mysql.jdbc.Driver
+      - ATL_JDBC_URL=jdbc:mysql://mysql:3306/jiradb?useSSL=false
+      - ATL_DB_SCHEMA_NAME=jiradb
+      - ATL_JDBC_USER=juser
+      - ATL_JDBC_PASSWORD=juser
+      - JVM_SUPPORT_RECOMMENDED_ARGS=-Datlassian.recovery.password=recovery_admin
+      # when using proxy
+      # - ATL_PROXY_NAME=127.0.0.1
+      # - ATL_PROXY_PORT=80
+      # - ATL_TOMCAT_SCHEME=http
+    ports:
+      - "127.0.0.1:8080:8080"
