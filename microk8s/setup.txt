@@ -1,0 +1,56 @@
+# install vagrant
+https://www.vagrantup.com/downloads.html
+wget https://releases.hashicorp.com/vagrant/2.2.4/vagrant_2.2.4_x86_64.deb
+sudo dpkg -i vagrant_2.2.4_x86_64.deb
+
+# libvirt vagrant ubuntu
+sudo apt install -y libvirt-bin vagrant-libvirt
+sudo apt install -y libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
+CONFIGURE_ARGS="with-libvirt-include=/usr/include/libvirt with-libvirt-lib=/usr/lib" vagrant plugin install vagrant-libvirt
+
+# select libvirt provider
+echo "export VAGRANT_DEFAULT_PROVIDER=libvirt" >> ~/.bashrc
+
+# host, fix nfs
+https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
+sudo vim /etc/sudoers.d/vagrant-syncedfolders
+Cmnd_Alias VAGRANT_EXPORTS_CHOWN = /bin/chown 0\:0 /tmp/*
+Cmnd_Alias VAGRANT_EXPORTS_MV = /bin/mv -f /tmp/* /etc/exports
+Cmnd_Alias VAGRANT_NFSD_CHECK = /etc/init.d/nfs-kernel-server status
+Cmnd_Alias VAGRANT_NFSD_START = /etc/init.d/nfs-kernel-server start
+Cmnd_Alias VAGRANT_NFSD_APPLY = /usr/sbin/exportfs -ar
+%sudo ALL=(root) NOPASSWD: VAGRANT_EXPORTS_CHOWN, VAGRANT_EXPORTS_MV, VAGRANT_NFSD_CHECK, VAGRANT_NFSD_START, VAGRANT_NFSD_APPLY
+
+# start vm
+vagrant up
+vagrant ssh
+
+
+
+# guest vm commands
+
+# fix dhcp dns
+sudo systemctl disable systemd-resolved
+sudo systemctl stop systemd-resolved
+sudo su
+rm /etc/resolv.conf
+echo "nameserver 1.1.1.1" | tee /etc/resolv.conf
+
+# microk8s.inspect fix WARNING: iptables DROP POLICY
+# https://stackoverflow.com/questions/54157660/how-to-fix-problem-with-pods-issue-pod-has-unbound-immediate-persistentvolumec
+sudo iptables -P FORWARD ACCEPT
+
+# install k8s
+sudo snap install microk8s --classic
+microk8s.enable dns metrics-server storage
+
+# install helm
+wget https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+tar -xvzf helm-v2.13.1-linux-amd64.tar.gz
+rm helm-v2.13.1-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
+helm init
+helm version
+
+microk8s.kubectl get pods --namespace kube-system
+
