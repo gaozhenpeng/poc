@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+
+  account:
+    image: backend
+    command: gunicorn app:api -b :3001
+    ports:
+      - "3001"
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432"
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - account
+    restart: always

@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+
+  backend:
+    image: backend
+    command: gunicorn entry:api -b :3001 --reload
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    volumes:
+      - ./app:/app
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
