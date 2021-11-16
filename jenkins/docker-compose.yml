@@ -7,6 +7,8 @@ services:
     hostname: jenkins
     environment:
       CASC_JENKINS_CONFIG: /usr/share/jenkins/ref/casc_configs/jenkins.yml
+      JENKINS_ADMIN_ID: admin
+      JENKINS_ADMIN_PASS: admin
     ports:
       - '127.0.0.1:8880:8080'
     volumes:
