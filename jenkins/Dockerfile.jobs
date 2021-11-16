@@ -1,0 +1,8 @@
+FROM python:3.7-alpine
+RUN apk --no-cache add curl \
+    && pip install --no-cache-dir requests jenkins-job-builder \
+    && mkdir -p /etc/jenkins_jobs/jobs
+COPY jobs/ /etc/jenkins_jobs/jobs/
+COPY create_jobs.py .
+COPY wait.sh .
+

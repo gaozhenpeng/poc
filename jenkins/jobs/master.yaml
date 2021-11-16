@@ -1,0 +1,10 @@
+- job:
+    name: master-test
+    description: |
+      Master node job test.
+    project_type: freestyle
+    builders:
+      - shell: |
+          hostname
+    node: master
+

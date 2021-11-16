@@ -33,6 +33,22 @@ services:
     depends_on:
       - jenkins
 
+  jenkins-jobs:
+    build:
+      dockerfile: ./Dockerfile.jobs
+    container_name: cn_jenkins_jobs
+    entrypoint: >
+      sh -c "
+        ./wait.sh jenkins:8080 403;
+        python -u create_jobs.py
+      "
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_USER=admin
+      - JENKINS_PASS=admin
+    depends_on:
+      - jenkins
+
   jenkins-slave:
     build:
       dockerfile: ./Dockerfile.slave

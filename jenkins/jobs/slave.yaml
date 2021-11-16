@@ -1,0 +1,10 @@
+- job:
+    name: slave-test
+    description: |
+      Slave node job test.
+    project_type: freestyle
+    builders:
+      - shell: |
+          hostname
+    node: slave
+
