@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/jenkins/jenkins
-FROM jenkins/jenkins:2.289.1-lts-alpine
+FROM jenkins/jenkins:2.303.3-lts-alpine
 
 ENV  JAVA_OPTS -Djenkins.install.runSetupWizard=false
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt

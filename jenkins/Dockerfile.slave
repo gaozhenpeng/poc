@@ -1,0 +1,8 @@
+# https://hub.docker.com/r/jenkins/jnlp-slave/tags
+FROM jenkins/jnlp-slave:4.9-1-alpine
+
+USER root
+RUN apk update && apk --no-cache add curl jq
+COPY wait.sh /bin
+# USER jenkins
+

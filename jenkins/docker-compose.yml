@@ -11,5 +11,39 @@ services:
       JENKINS_ADMIN_PASS: admin
     ports:
       - '127.0.0.1:8880:8080'
+      - '50000'
     volumes:
       - ./jenkins.yml:/usr/share/jenkins/ref/casc_configs/jenkins.yml
+
+  jenkins-setter:
+    build:
+      dockerfile: ./Dockerfile.setter
+    container_name: cn_jenkins_setter
+    ports:
+      - "127.0.0.1:8102:8102"
+    entrypoint: >
+      sh -c "
+        ./wait.sh jenkins:8080 403;
+        python -u serve_secrets.py
+      "
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_USER=admin
+      - JENKINS_PASS=admin
+    depends_on:
+      - jenkins
+
+  jenkins-slave:
+    build:
+      dockerfile: ./Dockerfile.slave
+    container_name: cn_jenkins-slave
+    entrypoint: >
+      bash -c "
+        wait.sh jenkins-setter:8102 200;
+        JENKINS_URL=http://jenkins:8080;
+        JENKINS_AGENT_NAME=slave;
+        JENKINS_SECRET=$$(curl jenkins-setter:8102 | jq -r '.slave');
+        jenkins-slave -url $$JENKINS_URL $$JENKINS_SECRET $$JENKINS_AGENT_NAME
+      "
+    depends_on:
+      - jenkins-setter

@@ -1,5 +1,6 @@
 jenkins:
-  systemMessage: "This jenkins is configured and managed as a code.\n\n"
+  systemMessage: |
+    This jenkins is configured and managed as a code.
   authorizationStrategy:
     roleBased:
       roles:
@@ -23,3 +24,15 @@ jenkins:
       users:
         - id: ${JENKINS_ADMIN_ID}
           password: ${JENKINS_ADMIN_PASS}
+
+  nodes:
+  - permanent:
+      launcher: jnlp
+      name: slave
+      numExecutors: 1
+      remoteFS: /home/jenkins
+      retentionStrategy: always
+
+security:
+  apiToken:
+    usageStatisticsEnabled: false
