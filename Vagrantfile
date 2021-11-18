@@ -57,6 +57,7 @@ cd ~
 git clone https://github.com/janmaghuyop/dotfiles.git
 cd dotfiles
 . link.sh
+rm ~/.tmux.conf
 
 
 # bin
