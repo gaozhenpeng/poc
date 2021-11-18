@@ -51,6 +51,9 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 sudo curl -sL "https://github.com/rancher/k3d/releases/download/v5.1.0/k3d-linux-amd64" -o /usr/local/bin/k3d
 sudo chmod +x /usr/local/bin/k3d
 
+# misc
+sudo apt-get install -y ldap-utils
+
 
 # dotfiles
 cd ~
