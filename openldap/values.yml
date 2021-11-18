@@ -73,13 +73,13 @@ configPassword: password
 # Custom openldap configuration files used to override default settings
 customLdifFiles:
   0-initial-config.ldif: |-
-    dn: ou=People,dc=example,dc=com
+    dn: ou=people,dc=example,dc=com
     objectClass: organizationalUnit
-    ou: People
+    ou: people
 
-    dn: ou=People,dc=example,dc=com
+    dn: ou=group,dc=example,dc=com
     objectClass: organizationalUnit
-    ou: Group
+    ou: group
 
 ## Persist data to a persistent volume
 persistence:
