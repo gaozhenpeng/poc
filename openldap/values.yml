@@ -54,15 +54,13 @@ service:
 # Default configuration for openldap as environment variables. These get injected directly in the container.
 # Use the env variables from https://github.com/osixia/docker-openldap#beginner-guide
 env:
-  LDAP_ORGANISATION: "Example Corp"
+  LDAP_ORGANISATION: "Example"
   LDAP_DOMAIN: "example.com"
   LDAP_BACKEND: "hdb"
+  LDAP_BASE_DN: "dc=example,dc=com"
   LDAP_TLS: "false"
   LDAP_TLS_ENFORCE: "false"
-  LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
-  LDAP_READONLY_USER: "true"
-  LDAP_READONLY_USER_USERNAME: readonly
-  LDAP_READONLY_USER_MASSWORD: password
+  LDAP_TLS_VERIFY_CLIENT: "never"
 
 # Default Passwords to use, stored as a secret. If unset, passwords are auto-generated.
 # You can override these at install time with
@@ -72,14 +70,25 @@ configPassword: password
 
 # Custom openldap configuration files used to override default settings
 customLdifFiles:
-  0-initial-config.ldif: |-
-    dn: ou=people,dc=example,dc=com
-    objectClass: organizationalUnit
-    ou: people
+  01-default-users.ldif: |-
+    # group
+    dn: ou=devs,dc=example,dc=com
+    objectclass: top
+    objectclass: organizationalUnit
+    ou: devs
 
-    dn: ou=group,dc=example,dc=com
-    objectClass: organizationalUnit
-    ou: group
+    # user
+    dn: uid=jdoe,ou=devs,dc=example,dc=com
+    objectclass: top
+    objectclass: person
+    objectclass: organizationalPerson
+    objectclass: inetOrgPerson
+    uid: jdoe
+    cn: John
+    sn: Doe
+    mail: jdoe@example.com
+    userPassword: jdoepass
+
 
 ## Persist data to a persistent volume
 persistence:

@@ -1,25 +1,15 @@
-# leave blank line below
+dn: ou=devs,dc=example,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: devs
 
-dn: dc=example,dc=com
-dc: example
-description: description
-objectClass: dcObject
-objectClass: organization
-o: Example Corp.
-
-dn: ou=people,dc=example,dc=com
-ou: people
-description: people in example
-objectClass: organizationalUnit
-
-dn: cn=John Doe,ou=people,dc=example,dc=com
-objectClass: inetOrgPerson
-cn: John Doe
-cn: John Doe 1
-cn: John Doe 2
-sn: Doe
+dn: uid=jdoe,ou=devs,dc=example,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
 uid: jdoe
-userpassword: jdoepass
-mail: johndoe@example.com
-description: john doe
-ou: Department 1
+cn: John
+sn: Doe
+mail: jdoe@example.com
+userPassword: jdoepass
