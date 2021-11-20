@@ -1,0 +1,106 @@
+# https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins
+# https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml
+# https://hub.docker.com/r/jenkins/jenkins
+# https://hub.docker.com/r/jenkins/jnlp-slave/tags
+
+controller:
+  image: "jenkins/jenkins"
+  tag: "2.303.3-lts-alpine"
+  imagePullPolicy: "Always"
+
+  adminUser: jdoe
+
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+
+  containerEnv:
+    - name: LDAP_MANAGER_DN
+      value: "cn=admin,dc=example,dc=com"
+    - name: LDAP_MANAGER_PASSWORD_SECRET
+      value: "password"
+    - name: TZ
+      value: "Europe/Amsterdam"
+
+  # https://updates.jenkins.io/download/plugins
+  # List of plugins to be install during Jenkins controller start
+  installPlugins:
+    - kubernetes:1.30.1
+    - workflow-aggregator:2.6
+    - git:4.9.0
+    - configuration-as-code:1.53
+    - ldap:2.7
+    - rebuild:1.32
+
+  JCasC:
+    defaultConfig: true
+    enabled: true
+
+    configScripts:
+
+      welcome-message: |
+        jenkins:
+          systemMessage: "This jenkins is configured and managed as a code.\n
+                          Do not configure this jenkins manually or your changes will not be saved!\n"
+
+      ldap: |
+        jenkins:
+          securityRealm:
+            ldap:
+              configurations:
+                - server: "ldap://openldap:389"
+                  rootDN: "dc=example,dc=com"
+                  managerDN: "${LDAP_MANAGER_DN}"
+                  managerPasswordSecret: "${LDAP_MANAGER_PASSWORD_SECRET}"
+
+      shell: |
+        unclassified:
+          shell:
+            shell: "/bin/bash"
+
+      kubernetes: |
+        jenkins:
+          clouds:
+          - kubernetes:
+              containerCapStr: "10"
+              jenkinsTunnel: "jenkins-agent:50000"
+              jenkinsUrl: "http://jenkins:8080"
+              maxRequestsPerHostStr: "32"
+              name: "kubernetes"
+              namespace: "default"
+              serverUrl: "https://kubernetes.default"
+              templates:
+              - label: "default"
+                name: "default"
+                nodeUsageMode: "NORMAL"
+                workspaceVolume:
+                  emptyDirWorkspaceVolume:
+                    memory: false
+                yaml: " apiVersion: v1\n\
+                      \ kind: Pod\n\
+                      \ spec:\n\
+                      \   containers:\n\
+                      \   - name: jnlp\n\
+                      \     image: jenkins/jnlp-slave:4.9-1-alpine\n\
+                      \     imagePullPolicy: Always\n\
+                      \     env:\n\
+                      \     - name: JENKINS_URL\n\
+                      \       value: http://jenkins:8080\n"
+
+  sidecars:
+    configAutoReload:
+      enabled: true
+
+  csrf:
+    defaultCrumbIssuer:
+      enabled: false
+      proxyCompatability: true
+
+agent:
+  enabled: false
+
+persistence:
+  enabled: false
+

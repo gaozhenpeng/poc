@@ -86,8 +86,9 @@ customLdifFiles:
     uid: jdoe
     cn: John
     sn: Doe
+    displayname: John Doe
     mail: jdoe@example.com
-    userPassword: jdoepass
+    userpassword: jdoepass
 
 
 ## Persist data to a persistent volume
