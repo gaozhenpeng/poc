@@ -15,13 +15,15 @@ halyard:
   # Provide a config map with Hal commands that will be run the core config (storage)
   # The config map should contain a script in the config.sh key
   additionalScripts:
-    enabled: false
-    configMapName: my-halyard-config
-    configMapKey: config.sh
-    # If you'd rather do an inline script, set create to true and put the content in the data dict like you would a configmap
-    # The content will be passed through `tpl`, so value interpolation is supported.
-    create: false
-    data: {}
+    create: true
+    data:
+      set_ldap.sh: |-
+        $HAL_COMMAND config security authn ldap edit --user-dn-pattern="uid={0},ou=devs" --url=ldap://openldap:389/dc=example,dc=com
+        $HAL_COMMAND config security authn ldap enable
+      fix_login.sh: |-
+        $HAL_COMMAND config security api edit --override-base-url http://192.168.56.222:8084
+        $HAL_COMMAND config security ui edit --override-base-url http://192.168.56.222:9000
+        $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri http://192.168.56.222:8084/login
   additionalSecrets:
     create: false
     data: {}
