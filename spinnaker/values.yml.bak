@@ -1,0 +1,114 @@
+# https://github.com/OpsMx/spinnaker-helm/blob/main/values.yaml
+
+halyard:
+  # If spinnakerVersion is not specified appVersion in Chart.yml is chosen for Spinnaker
+  #spinnakerVersion: 1.22.2
+  #spinnakerVersion: 1.24.2
+  image:
+    repository: gcr.io/spinnaker-marketplace/halyard
+    tag: 1.39.0
+  persistence:
+    enabled: false
+
+  additionalInstallParameters:
+    - "--wait-for-completion"
+
+  additionalScripts:
+    create: true
+    data:
+      set_ldap.sh: |-
+        $HAL_COMMAND config security authn ldap edit --user-dn-pattern="uid={0},ou=devs" --url=ldap://openldap:389/dc=example,o=example
+        $HAL_COMMAND config security authn ldap enable
+      fix_login.sh: |-
+        $HAL_COMMAND config security api edit --override-base-url http://192.168.56.222:8441
+        $HAL_COMMAND config security ui edit --override-base-url http://192.168.56.222:8441
+        $HAL_COMMAND config security authn oauth2 edit --pre-established-redirect-uri http://192.168.56.222:8441/login
+
+#      set_gitlab_artifict.sh: |-
+#        $HAL_COMMAND config features edit --artifacts true
+#        $HAL_COMMAND config artifact gitlab account add gitlab --token gitlab_token
+#        $HAL_COMMAND config artifact gitlab enable
+
+#      enable_slack_notification.sh: |-
+#        SPINNAKER_BOT=spinnaker
+#        TOKEN_FROM_SLACK=slack_token
+#        $HAL_COMMAND config notification slack edit --bot-name $SPINNAKER_BOT --token $TOKEN_FROM_SLACK
+
+  additionalProfileConfigMaps:
+    data:
+      gate-local.yml:
+        server:
+          tomcat:
+            protocolHeader: X-Forwarded-Proto
+            remoteIpHeader: X-Forwarded-For
+            internalProxies: .*
+            httpsServerPort: X-Forwarded-Port
+      front50-local.yml:
+        spinnaker.s3.versioning: false
+
+#  additionalServiceSettings:
+#    clouddriver.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    rosco.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    gate.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    echo.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    deck.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    orca.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    igor.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+#    front50.yml:
+#      kubernetes:
+#        nodeSelector:
+#          node: spinnaker
+
+kubeConfig:
+  enabled: true
+  secretName: spin-kubeconfig
+  secretKey: spinnaker-kubeconfig
+  contexts:
+  - default
+  deploymentContext: default
+
+spinnakerFeatureFlags:
+  - artifacts
+  - pipeline-templates
+  - managed-pipeline-templates-v2-ui
+
+#nodeSelector:
+#  node: spinnaker
+
+redis:
+  enabled: true
+  password: password
+  cluster:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+#  nodeSelector:
+#    node: spinnaker
+
+minio:
+  enabled: true
+
+s3:
+  enabled: false
