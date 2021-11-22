@@ -1,0 +1,9 @@
+# https://github.com/rancher/rancher/blob/master/chart/values.yaml
+
+ingress:
+  enabled: false
+
+replicas: 1
+tls: external
+
+bootstrapPassword: "pass"
