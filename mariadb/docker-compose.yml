@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  mariadb-master:
+    container_name: cn_mariadb_master
+    # https://hub.docker.com/r/bitnami/mariadb
+    image: bitnami/mariadb:10.3.15
+    hostname: mariadb-master
+    environment:
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US:en
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_USER=test
+      - MARIADB_DATABASE=test
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_PASSWORD=root
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - ./custom.cnf:/opt/bitnami/mariadb/conf/custom.cnf:ro
+
+  mariadb-slave:
+    container_name: cn_mariadb_master
+    # https://hub.docker.com/r/bitnami/mariadb
+    image: bitnami/mariadb:10.3.15
+    hostname: mariadb-slave
+    environment:
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US:en
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_USER=test
+      - MARIADB_DATABASE=test
+      - MARIADB_MASTER_HOST=mariadb-master
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_ROOT_PASSWORD=root
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - ./custom.cnf:/opt/bitnami/mariadb/conf/custom.cnf:ro
