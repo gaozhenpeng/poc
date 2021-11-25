@@ -1,0 +1,21 @@
+# https://artifacthub.io/packages/helm/codecentric/keycloak/15.0.0
+# https://github.com/codecentric/helm-charts/blob/master/charts/keycloak/values.yaml
+
+# Keycloak image tag default is the chart version
+
+extraEnv: |
+  - name: KEYCLOAK_USER
+    value: admin
+  - name: KEYCLOAK_PASSWORD
+    value: admin
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
+
+# postgres values
+# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+#postgresql:
+#  persistence:
+#    existingClaim: "data-keycloak-postgresql-0"
+#  primary:
+#    nodeSelector:
+#      node: keycloak
