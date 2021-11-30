@@ -1,0 +1,16 @@
+# https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml
+
+alertmanager:
+  enabled: false
+
+pushgateway:
+  enabled: false
+
+server:
+  image:
+    repository: prom/prometheus
+    tag: v2.31.1
+
+  persistentVolume:
+    enabled: false
+
