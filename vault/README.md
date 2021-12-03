@@ -16,6 +16,14 @@ vault kv get kv/secret2
 vault kv list kv
 vault kv delete kv/secret2
 
+# ldap
+vault auth enable ldap
+vault write auth/ldap/config \
+   url="ldap://ldap:389" \
+   userattr="uid" \
+   userdn="ou=devs,dc=example,dc=com" \
+   binddn="cn=admin,dc=example,dc=com" \
+   bindpass='password'
 
 # poc
 k3d cluster start poc
