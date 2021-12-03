@@ -5,12 +5,12 @@ services:
     # https://github.com/osixia/docker-openldap
     # https://hub.docker.com/r/osixia/openldap/tags
     image: osixia/openldap:1.5.0
-    container_name: cn_ldap
     hostname: ldap
+    container_name: cn_ldap
     command: --copy-service
     ports:
-      - "5389:389"
-      - "5636:636"
+      - "127.0.0.1:5389:389"
+      - "127.0.0.1:5636:636"
     environment:
       LDAP_ORGANISATION: example
       LDAP_DOMAIN: example.com
@@ -18,3 +18,8 @@ services:
       LDAP_BASE_DN: dc=example,dc=com
     volumes:
       - ./bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif
+
+networks:
+  default:
+    external:
+      name: poc

@@ -27,4 +27,13 @@ ldapsearch -x -H ldap://localhost:5389 -b dc=example,dc=com \
 
 # destroy
 helm uninstall openldap
+
+# compose
+docker-compose up -d
+docker-compose exec ldap bash
+
+ldapsearch -x -H ldap://localhost:389 -b dc=example,dc=com \
+  -D cn=admin,dc=example,dc=com -w password
+
+docker-compose down
 ```
