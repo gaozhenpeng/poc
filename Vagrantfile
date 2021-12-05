@@ -14,6 +14,8 @@ Vagrant.configure("2") do |config|
       vb.memory = "8192"
       # disable logging
       vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+      # virt
+      vb.customize ['modifyvm', :id, '--nested-hw-virt', 'on']
     end
 
     config.vm.provision "shell", :inline => <<END
@@ -53,6 +55,13 @@ sudo chmod +x /usr/local/bin/k3d
 
 # misc
 sudo apt-get install -y ldap-utils
+
+
+# kvm
+# https://help.ubuntu.com/community/KVM/Installation
+sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
+sudo adduser vagrant libvirt
+sudo adduser vagrant kvm
 
 
 # dotfiles
