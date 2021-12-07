@@ -19,13 +19,13 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.provision "shell", :inline => <<END
-sudo apt-get update
-sudo apt-get install -y unzip
+apt-get update
+apt-get install -y unzip
 
 
 # docker
 # https://docs.docker.com/engine/install/ubuntu/
-sudo apt-get install -y \
+apt-get install -y \
      ca-certificates \
      curl \
      gnupg \
@@ -37,35 +37,38 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-sudo usermod -aG docker vagrant
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io
+usermod -aG docker vagrant
 
 # compose
 # https://docs.docker.com/compose/install/
-sudo curl -sL "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+curl -sL "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # k3d
 # https://k3d.io
 # https://github.com/rancher/k3d/releases
-sudo curl -sL "https://github.com/rancher/k3d/releases/download/v5.1.0/k3d-linux-amd64" -o /usr/local/bin/k3d
-sudo chmod +x /usr/local/bin/k3d
+curl -sL "https://github.com/rancher/k3d/releases/download/v5.1.0/k3d-linux-amd64" -o /usr/local/bin/k3d
+chmod +x /usr/local/bin/k3d
 
 # misc
-sudo apt-get install -y ldap-utils
+apt-get install -y ldap-utils
 
 
 # kvm
 # https://help.ubuntu.com/community/KVM/Installation
-sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
-sudo adduser vagrant libvirt
-sudo adduser vagrant kvm
+apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
+adduser vagrant libvirt
+adduser vagrant kvm
+# https://ubuntu.com/server/docs/virtualization-virt-tools
+apt-get intsall -y virtinst
 
 
 # dotfiles
-cd ~
+export HOME=/home/vagrant
+cd $HOME
 git clone https://github.com/janmaghuyop/dotfiles.git
 cd dotfiles
 . link.sh
@@ -73,10 +76,12 @@ rm ~/.tmux.conf
 
 
 # bin
-cd ~
+cd /home/vagrant
 git clone https://github.com/janmaghuyop/bin.git
 cd bin
 . download.sh
+
+chown -R vagrant:vagrant $HOME
 END
   end
 
