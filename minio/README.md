@@ -10,6 +10,9 @@
 - https://github.com/minio/operator/blob/master/helm/minio-operator/values.yaml
 - https://docs.min.io/minio/baremetal/lifecycle-management/lifecycle-management-overview.html
 - https://docs.min.io/docs/minio-client-complete-guide.html
+- https://restic.net/
+- https://github.com/restic/restic/releases/
+- https://restic.readthedocs.io/en/stable/
 
 ```bash
 k3d cluster start poc
@@ -35,4 +38,12 @@ echo "test" > test.txt
 
 # object expiration
 ./mc ilm add --expiry-days 60 docker/test
+
+# backup to minio using restic
+export AWS_ACCESS_KEY_ID=minio
+export AWS_SECRET_ACCESS_KEY=minio1234
+./restic -r s3:http://minio:9000/backup init
+./restic -r s3:http://minio:9000/backup backup test.txt
+
+# backup minio to local
 ```
