@@ -46,4 +46,9 @@ export AWS_SECRET_ACCESS_KEY=minio1234
 ./restic -r s3:http://minio:9000/backup backup test.txt
 
 # backup minio to local
+./mc cp -r docker/test .
+apk update
+apk add --no-cache pigz
+tar -cvf test.tar test
+pigz -9 -p1 test.tar
 ```
