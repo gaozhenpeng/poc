@@ -1,0 +1,24 @@
+lxc launch ubuntu:20.04 -p default clamav
+lxc exec clamav -- sudo --user ubuntu --login
+
+# tools
+sudo apt install -y aria2
+
+# install
+sudo apt update
+sudo apt install -y clamav clamav-daemon
+
+# check
+clamscan -V
+sudo systemctl status clamav-freshclam
+
+# update db
+sudo systemctl stop clamav-freshclam
+sudo freshclam
+
+# start
+sudo systemctl start clamav-freshclam
+sudo systemctl start clamav-daemon
+
+# test
+clamscan -r -i <PATH>
