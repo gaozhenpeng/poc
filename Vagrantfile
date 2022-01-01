@@ -20,8 +20,6 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "shell", :inline => <<END
 apt-get update
-apt-get install -y unzip
-
 
 # docker
 # https://docs.docker.com/engine/install/ubuntu/
@@ -56,7 +54,6 @@ chmod +x /usr/local/bin/k3d
 # misc
 apt-get install -y ldap-utils
 
-
 # kvm
 # https://help.ubuntu.com/community/KVM/Installation
 apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
@@ -65,23 +62,6 @@ adduser vagrant kvm
 # https://ubuntu.com/server/docs/virtualization-virt-tools
 apt-get intsall -y virtinst
 
-
-# dotfiles
-export HOME=/home/vagrant
-cd $HOME
-git clone https://github.com/janmaghuyop/dotfiles.git
-cd dotfiles
-. link.sh
-rm ~/.tmux.conf
-
-
-# bin
-cd /home/vagrant
-git clone https://github.com/janmaghuyop/bin.git
-cd bin
-. download.sh
-
-chown -R vagrant:vagrant $HOME
 END
   end
 
